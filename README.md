@@ -1,8 +1,8 @@
-Dell XPS 9560 Kernel Builder for Fedora
+Dell XPS 9650 Kernel Builder for Fedora
 =======================================
 
 This script builds and installs the current stable version of the kernel with
-patches and config for the Dell XPS 9560.
+patches and config for the Dell XPS 9650.
 
 Kernel Changes
 --------------
@@ -21,3 +21,4 @@ Todo
 - Add Killer wireless driver patch to solve transfer rate issue.
 - Install kernel packages on completion of build.
 - Copy built kernel to folder and warn before rebuilding same kernel version.
+- Flag to install kernel on build completion.

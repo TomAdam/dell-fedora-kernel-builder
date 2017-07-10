@@ -1,3 +1,4 @@
 /.idea
-/build
+/kernel-build
 /.build*.log
+/packages

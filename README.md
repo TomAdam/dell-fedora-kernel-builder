@@ -19,6 +19,3 @@ Todo
 ----
 
 - Add Killer wireless driver patch to solve transfer rate issue.
-- Install kernel packages on completion of build.
-- Copy built kernel to folder and warn before rebuilding same kernel version.
-- Flag to install kernel on build completion.

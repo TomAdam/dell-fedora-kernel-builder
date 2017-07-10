@@ -15,27 +15,27 @@ fi
 
 BUILD_ID="${1}"
 DIR="$(dirname ${0})"
-BUILD_DIR="${DIR}/build"
+BUILD_DIR="${DIR}/kernel-build"
 
 function installBaseDeps {
-    message "Installing base dependencies"
-    sudo dnf install -y fedora-packager
+    message "Installing base dependencies (sudo required)"
+    sudo dnf install -y fedora-packager > /dev/null 2
 }
 
 function cloneRepo {
     message "Cloning kernel repo"
-    fedpkg clone --anonymous kernel "${BUILD_DIR}"
+    fedpkg clone --anonymous kernel "${BUILD_DIR}" > /dev/null
 }
 
 function checkoutReleaseBranch {
     message "Checking out release branch"
     RELEASE_NUM="$(lsb_release -sr)"
-    git -C "${BUILD_DIR}" checkout -b local-build origin/f${RELEASE_NUM}
+    git -C "${BUILD_DIR}" checkout -b local-build origin/f${RELEASE_NUM} > /dev/null
 }
 
 function installBuildDeps {
-    message "Installing build dependencies"
-    sudo dnf builddep -y "${BUILD_DIR}/kernel.spec"
+    message "Installing build dependencies (sudo required)"
+    sudo dnf builddep -y "${BUILD_DIR}/kernel.spec" > /dev/null
 }
 
 function setBuildId {
@@ -50,12 +50,20 @@ function writeKernelOption {
 
 function build {
     message "Building kernel, this will take over an hour"
-    fedpkg --path "${BUILD_DIR}" local > /dev/null
+    fedpkg --path "${BUILD_DIR}" local  > /dev/null 2>&1
+    # TODO: check for build failure here
     message "Kernel built"
 }
 
-function install {
-    message "Installing built kernel (feature not implemented)"
+function movePackages {
+    ARCH="$(uname -p)"
+    BUILD_PACKAGE_DIR="${BUILD_DIR}/${ARCH}"
+    KERNEL_VERSION=$(ls ${BUILD_PACKAGE_DIR}/kernel-* | tail -n 1 | sed -r "s/.*(([0-9]+[\.|-]){4}\w+\.\w+).*/\1/")
+    PACKAGE_DIR="${DIR}/packages/${KERNEL_VERSION}"
+    message "Moving built kernel to `realpath ${PACKAGE_DIR}`"
+    mkdir -p ${PACKAGE_DIR}
+    mv ${BUILD_PACKAGE_DIR}/* ${PACKAGE_DIR}
+    mv ${DIR}/.build-${KERNEL_VERSION}.log ${PACKAGE_DIR}
 }
 
 function cleanup {
@@ -69,7 +77,7 @@ function message {
     tput sgr0
 }
 
-#cleanup
+cleanup
 installBaseDeps
 cloneRepo
 checkoutReleaseBranch
@@ -77,5 +85,5 @@ installBuildDeps
 setBuildId
 writeKernelOption
 build
-install
-#cleanup
+movePackages
+cleanup

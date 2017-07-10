@@ -15,6 +15,16 @@ on sleep issue. The kernel boot flag `acpi_rev_override=1` should be set to
 take advantage of this option.
 
 
+Usage
+-----
+
+```bash
+./build.sh build_id
+```
+
+Where `build_id` is a name for your build.
+
+
 Todo
 ----
 

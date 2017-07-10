@@ -18,4 +18,4 @@ take advantage of this option.
 Todo
 ----
 
-- Add Killer wireless driver patch to solve transfer rate issue.
+- Add error handling

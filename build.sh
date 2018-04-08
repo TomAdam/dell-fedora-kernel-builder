@@ -21,7 +21,7 @@ BUILD_DIR="${DIR}/kernel-build"
 
 function installBaseDeps {
     message "Installing base dependencies (sudo required)"
-    sudo dnf install -y fedora-packager > /dev/null 2
+    sudo dnf install -y fedora-packager > /dev/null
 }
 
 function cloneRepo {
